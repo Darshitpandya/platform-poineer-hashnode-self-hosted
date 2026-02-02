@@ -29,7 +29,7 @@ export const Footer = () => {
 					<div className="[&>div]:!justify-center">
 						<SocialLinks isSidebar={true} />
 					</div>
-					<p>&copy; 2023 Company Inc.</p>
+					<p>&copy; {new Date().getFullYear()} {publication.title}. All rights reserved.</p>
 					<p>
 						<a href="#" className="hover:underline">
 							Privacy Policy
