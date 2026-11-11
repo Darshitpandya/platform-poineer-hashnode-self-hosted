@@ -1,0 +1,29 @@
+version: 1
+applications:
+  - appRoot: packages/blog-starter-kit/themes/enterprise
+    frontend:
+      buildPath: /
+      phases:
+        preBuild:
+          commands:
+            - nvm install 20
+            - nvm use 20
+            # Newer corepack avoids signature-key errors when fetching recent pnpm releases
+            - npm install -g corepack@latest
+            - corepack enable
+            # Uses the version pinned in package.json "packageManager"; nodeLinker comes from pnpm-workspace.yaml
+            - pnpm install --frozen-lockfile --filter "@starter-kit/blog-enterprise..."
+        build:
+          commands:
+            # Make Amplify env vars available to Next.js at build time and to the SSR runtime
+            # grep exits 1 when nothing matches, which would fail the build; warn instead
+            - env | grep -e '^NEXT_PUBLIC_' >> packages/blog-starter-kit/themes/enterprise/.env.production || echo "WARNING - no NEXT_PUBLIC_ env vars set in Amplify"
+            - pnpm --filter @starter-kit/blog-enterprise run build
+      artifacts:
+        baseDirectory: packages/blog-starter-kit/themes/enterprise/.next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - packages/blog-starter-kit/themes/enterprise/.next/cache/**/*
