@@ -6,7 +6,7 @@ COPY . /app
 WORKDIR /app
 
 # Install pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@12.18.0
 
 # By default, use the enterprise theme
 ARG THEME=enterprise
